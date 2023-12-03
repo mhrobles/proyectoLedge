@@ -6,7 +6,7 @@ import axios from 'axios';
 const VideoPlayer = () => {
 
     const api = axios.create({
-      baseURL: 'http://localhost:3000/video', // Ajusta la URL base según tu configuración
+      baseURL: 'http://localhost:3002/video', // Ajusta la URL base según tu configuración
     });
 
     // Contador de visualizaciones
