@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 
+import axios from 'axios';
+
 const VideoPlayer = () => {
+
+    const api = axios.create({
+      baseURL: 'http://localhost:3002/video', // Ajusta la URL base según tu configuración
+    });
 
     // Contador de visualizaciones
     const [viewCount, setViewCount] = useState(0);
@@ -16,6 +22,9 @@ const VideoPlayer = () => {
     const [play, setPlay] = useState(false);
     // Tiempo en el que el usuario le dio play al video
     const [startTimePlay, setStartTimePlay] = useState(0);
+
+    const [video, setVideo] = useState(null);
+
 
     const handleProgress = () => {
         // Si el video está pausado, no hace nada
@@ -34,6 +43,7 @@ const VideoPlayer = () => {
         // Si el usuario ha visto al menos el 60% del video
         if (playedPercentage >= 60 && viewCount === 0) {
             // Incrementa la cantidad de visualizaciones
+            updateViewCount();
             setViewCount((prevCount) => prevCount + 1);
         }
     };
@@ -63,10 +73,35 @@ const VideoPlayer = () => {
     setTotalSeconds(totalSeconds + Math.round(timeElapsed / 1000));
   }
 
+  const video_url = async () => {
+    try {
+      const response = await api.get('');
+      console.log(response)
+      setViewCount(response.data.visualizaciones);
+      setVideo(response.data.link);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function updateViewCount() {
+    try {
+      // sería put, no post
+      const response = await api.put('/visualizaciones');
+      console.log(response)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    video_url();
+  }, []);
+
   return (
     <div>
       <ReactPlayer
-        url="https://www.youtube.com/watch?v=pDGEwmnD7dM&list=RDpDGEwmnD7dM&start_radio=1"
+        url={video}
         controls
         onProgress={handleProgress} // Se ejecuta cada segundo
         onDuration={handleDuration} // Se ejecuta una sola vez
