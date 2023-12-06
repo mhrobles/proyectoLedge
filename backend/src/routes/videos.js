@@ -2,18 +2,33 @@ const Router = require('koa-router');
 
 const router = new Router();
 
-// Por el momento, dejo el valor hardcodeado, queda pendiente arreglarlo
-
-const videos = [
-    {
-        name: 'demo 5',
-        link: 'https://www.youtube.com/watch?v=pDGEwmnD7dM&list=RDpDGEwmnD7dM&start_radio=1',
-        visualizaciones: 40,
+router.get('videos.show', '/:id', async ctx => {
+    try {
+        const video = await ctx.orm.Videos.findByPk(ctx.params.id);
+        ctx.body = video;
     }
-]
+    catch (error) {
+        console.log(error);
+    }
+})
 
-router.get('videos.show', '/', async ctx => {
-    ctx.body = videos[0];
+router.get('videos.show', '/:id/visualizaciones', async ctx => {
+    try {
+        const video = await ctx.orm.Videos.findByPk(ctx.params.id);
+        if (video) {
+            video.visualizaciones += 1;
+            await video.save();
+            ctx.body = video;
+        } else {
+            ctx.status = 404;
+            ctx.body = "Video not found";
+        }
+    }
+    catch (error) {
+        console.log(error);
+        ctx.status = 500;
+        ctx.body = "Server error";
+    }
 })
 
 router.put('/visualizaciones', async ctx => {
