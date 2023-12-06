@@ -1,0 +1,10 @@
+.videoCard {
+    list-style: none;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.videoImage {
+    border-radius: 10px;
+    background-color: azure;
+}

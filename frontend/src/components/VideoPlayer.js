@@ -3,10 +3,10 @@ import ReactPlayer from 'react-player';
 
 import axios from 'axios';
 
-const VideoPlayer = () => {
+const VideoPlayer = ({ id }) => {
 
     const api = axios.create({
-      baseURL: 'http://localhost:3002/video/0', // Por el momento solo obtendré el video con id 1
+      baseURL: 'http://localhost:3002', // Por el momento solo obtendré el video con id 1
     });
 
     // Contador de visualizaciones
@@ -26,6 +26,8 @@ const VideoPlayer = () => {
     const [video, setVideo] = useState(null);
     // Estado de si se sumó la visualización o no
     const [visto, setVisto] = useState(false);
+
+    const [name, setName] = useState(null);
 
     const handleProgress = () => {
         // Si el video está pausado, no hace nada
@@ -76,14 +78,16 @@ const VideoPlayer = () => {
   }
 
   useEffect(() => {
+    console.log("Obteniendo video", id);
     video_url();
   }, []);
 
   const video_url = async () => {
     try {
-      const response = await api.get();
+      const response = await api.get(`video/${id}`);
       setViewCount(response.data.visualizaciones);
       setVideo(response.data.link);
+      setName(response.data.name);
     } catch (error) {
       console.error(error);
     }
@@ -91,7 +95,7 @@ const VideoPlayer = () => {
 
   async function updateViewCount() {
     try {
-      const response = await api.get('/visualizaciones');
+      const response = await api.get(`/video/${id}/visto`);
       setViewCount(response.data.visualizaciones);
     } catch (error) {
       console.error(error);
@@ -109,6 +113,7 @@ const VideoPlayer = () => {
 
   return (
     <div>
+      <h1>{name}</h1>
       <ReactPlayer
         url={video}
         controls
