@@ -3,10 +3,10 @@ import ReactPlayer from 'react-player';
 
 import axios from 'axios';
 
-const VideoPlayer = () => {
+const VideoPlayer = ({ id }) => {
 
     const api = axios.create({
-      baseURL: 'http://localhost:3002/video', // Ajusta la URL base según tu configuración
+      baseURL: 'http://localhost:3002', // Por el momento solo obtendré el video con id 1
     });
 
     // Contador de visualizaciones
@@ -22,9 +22,12 @@ const VideoPlayer = () => {
     const [play, setPlay] = useState(false);
     // Tiempo en el que el usuario le dio play al video
     const [startTimePlay, setStartTimePlay] = useState(0);
-
+    // Link del video
     const [video, setVideo] = useState(null);
+    // Estado de si se sumó la visualización o no
+    const [visto, setVisto] = useState(false);
 
+    const [name, setName] = useState(null);
 
     const handleProgress = () => {
         // Si el video está pausado, no hace nada
@@ -41,10 +44,11 @@ const VideoPlayer = () => {
         const playedPercentage = ((seconds + totalSeconds) / videoDuration) * 100;
 
         // Si el usuario ha visto al menos el 60% del video
-        if (playedPercentage >= 60 && viewCount === 0) {
+        if (playedPercentage >= 60 && visto === false) {
+          console.log("Incrementando visualizaciones");
             // Incrementa la cantidad de visualizaciones
             updateViewCount();
-            setViewCount((prevCount) => prevCount + 1);
+            setVisto(true);
         }
     };
 
@@ -73,12 +77,17 @@ const VideoPlayer = () => {
     setTotalSeconds(totalSeconds + Math.round(timeElapsed / 1000));
   }
 
+  useEffect(() => {
+    console.log("Obteniendo video", id);
+    video_url();
+  }, []);
+
   const video_url = async () => {
     try {
-      const response = await api.get('');
-      console.log(response)
+      const response = await api.get(`video/${id}`);
       setViewCount(response.data.visualizaciones);
       setVideo(response.data.link);
+      setName(response.data.name);
     } catch (error) {
       console.error(error);
     }
@@ -86,20 +95,25 @@ const VideoPlayer = () => {
 
   async function updateViewCount() {
     try {
-      // sería put, no post
-      const response = await api.put('/visualizaciones');
-      console.log(response)
+      const response = await api.get(`/video/${id}/visto`);
+      setViewCount(response.data.visualizaciones);
     } catch (error) {
       console.error(error);
     }
   }
 
+  // Cada 10 segundos se ejecuta la función video_url para actualizar el numero de visualizaciones
   useEffect(() => {
-    video_url();
+    const interval = setInterval(() => {
+      console.log("Actualizando visualizaciones");
+      video_url();
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div>
+      <h1>{name}</h1>
       <ReactPlayer
         url={video}
         controls
