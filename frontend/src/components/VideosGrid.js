@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import styles from "./VideosGrid.module.css";
 import VideoCard from './VideoCard';
-
-const api = axios.create({
-    baseURL: 'http://localhost:3002', // Por el momento solo obtendré el video con id 1
-});
 
 const VideosGrid = () => {
     const [videos, setVideos] = useState([]);

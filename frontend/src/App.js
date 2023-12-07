@@ -3,10 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from 'react-router-dom';
-import VideoPlayer from './components/VideoPlayer';
-import VideosGrid from './components/VideosGrid';
 import Select from './views/select';
 import ShowVideo from './views/ShowVideo';
 import './App.css';

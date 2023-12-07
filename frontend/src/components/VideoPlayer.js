@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 
-import axios from 'axios';
+import api from '../services/api';
 
 const VideoPlayer = ({ id }) => {
-
-    const api = axios.create({
-      baseURL: 'http://localhost:3002', // Por el momento solo obtendré el video con id 1
-    });
 
     // Contador de visualizaciones
     const [viewCount, setViewCount] = useState(0);
@@ -78,7 +74,6 @@ const VideoPlayer = ({ id }) => {
   }
 
   useEffect(() => {
-    console.log("Obteniendo video", id);
     video_url();
   }, []);
 
