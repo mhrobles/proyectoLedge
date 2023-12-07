@@ -84,3 +84,7 @@ Para asignarle la contraseña al usuario, es necesario haber entrado a postgres 
 creación de base de datos:
 
 ```sudo -u postgres createdb db_name```
+
+## Aclaración
+
+Para ejecutar los comandos, tanto para frontend como para backend, es necesario que la consola se encuentre dentro de la carpeta con ese nombre.
