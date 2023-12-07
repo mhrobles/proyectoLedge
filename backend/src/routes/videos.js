@@ -5,7 +5,6 @@ const router = new Router();
 // muestra la informacion de un video
 router.get('video/:id', async ctx => {
     try {
-        console.log("id: ", ctx.params.id);
         const video = await ctx.orm.Videos.findByPk(ctx.params.id);
         ctx.body = video;
     }
@@ -48,7 +47,6 @@ router.get('video/:id/visto', async ctx => {
 // entrega el id, name y img de todos los videos 
 router.get('datos', async ctx => {
     try {
-        console.log("datos")
         const videos = await ctx.orm.Videos.findAll({
             attributes: ['id', 'name', 'img']
         });

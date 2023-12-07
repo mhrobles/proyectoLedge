@@ -5,7 +5,7 @@ const Select = () => {
     return (
         <div>
             <header className="App-header">
-                <h1>VideoPlayer APP</h1>
+                <h1 className="title">VideoPlayer APP</h1>
             </header>
             <main>
                 <VideosGrid />
